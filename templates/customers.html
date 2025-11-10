@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Customers</h2>
+<form method="POST" action="{{ url_for('customer_add') }}">
+Name: <input type="text" name="name">
+Phone: <input type="text" name="phone">
+Email: <input type="text" name="email">
+<button type="submit">Add Customer</button>
+</form>
+<table border="1">
+<tr><th>ID</th><th>Name</th><th>Phone</th><th>Email</th></tr>
+{% for c in customers %}
+<tr>
+<td>{{ c['id'] }}</td>
+<td>{{ c['name'] }}</td>
+<td>{{ c['phone'] }}</td>
+<td>{{ c['email'] }}</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
+
+
+

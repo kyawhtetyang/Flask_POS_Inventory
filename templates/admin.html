@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>User Management</h2>
+<form method="POST">
+Username: <input type="text" name="username">
+Password: <input type="password" name="password">
+Role: <select name="role">
+<option>Cashier</option>
+<option>Manager</option>
+<option>Admin</option>
+</select>
+<button type="submit">Add User</button>
+</form>
+<table border="1">
+<tr><th>ID</th><th>Username</th><th>Role</th></tr>
+{% for u in users %}
+<tr>
+<td>{{ u['id'] }}</td>
+<td>{{ u['username'] }}</td>
+<td>{{ u['role'] }}</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
+
+
+

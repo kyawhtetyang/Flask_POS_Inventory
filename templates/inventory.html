@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Inventory</h2>
+<a href="{{ url_for('inventory_add') }}">Add Product</a>
+<table border="1">
+<tr><th>ID</th><th>Name</th><th>Price</th><th>Qty</th><th>Category</th><th>Low Stock</th><th>Actions</th></tr>
+{% for p in products %}
+<tr>
+<td>{{ p['id'] }}</td>
+<td>{{ p['name'] }}</td>
+<td>{{ p['price'] }}</td>
+<td>{{ p['quantity'] }}</td>
+<td>{{ p['category'] }}</td>
+<td>{{ p['low_stock_threshold'] }}</td>
+<td><a href="{{ url_for('inventory_update_price', product_id=p['id']) }}">Update Price</a></td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
+
+
+
