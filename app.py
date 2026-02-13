@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 from models.user import User
 from models.inventory import Inventory
@@ -7,7 +8,7 @@ from models.report import Report
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = "secret_key_here"
+app.secret_key = os.getenv("SECRET_KEY", "dev-secret-key-change-me")
 
 # Initialize backend modules
 users = User()

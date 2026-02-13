@@ -3,6 +3,7 @@ __install/.build_hash
 
 # Python caches
 __pycache__/
+**/__pycache__/
 *.py[cod]
 *$py.class
 
@@ -27,17 +28,7 @@ Thumbs.db
 .vscode/
 .idea/
 
-# ML model outputs
-models/
-*.h5
-*.pt
-*.pkl
-*.joblib
-
-# Data files
-data/
-*.csv
-*.json
-*.txt
+# Local database/data artifacts
 *.db
-*.db
+shop.db
+receipts/
