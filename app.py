@@ -59,6 +59,8 @@ def inventory_add():
     if "user" not in session or session["user"]["role"] not in ("Manager","Admin"):
         flash("❌ Permission denied.")
         return redirect(url_for("inventory_list"))
+    if request.method == "GET":
+        return redirect(url_for("inventory_list"))
     if request.method == "POST":
         name = request.form["name"]
         price = float(request.form["price"])
@@ -66,19 +68,24 @@ def inventory_add():
         category = request.form.get("category","General")
         inventory.add_product(name, price, qty, category)
         return redirect(url_for("inventory_list"))
-    return render_template("add_product.html", user=session["user"])
+    return redirect(url_for("inventory_list"))
 
 @app.route("/inventory/update/<int:product_id>", methods=["GET","POST"])
 def inventory_update_price(product_id):
     if "user" not in session or session["user"]["role"] not in ("Manager","Admin"):
         flash("❌ Permission denied.")
         return redirect(url_for("inventory_list"))
+    if request.method == "GET":
+        return redirect(url_for("inventory_list"))
     product = inventory.cursor.execute("SELECT * FROM products WHERE id=?",(product_id,)).fetchone()
+    if not product:
+        flash("❌ Product not found.")
+        return redirect(url_for("inventory_list"))
     if request.method == "POST":
         new_price = float(request.form["price"])
         inventory.update_price(product["name"], new_price)
         return redirect(url_for("inventory_list"))
-    return render_template("update_price.html", product=product, user=session["user"])
+    return redirect(url_for("inventory_list"))
 
 # ------------------ Sales ------------------
 @app.route("/sale", methods=["GET","POST"])
@@ -161,5 +168,4 @@ def admin_page():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
 

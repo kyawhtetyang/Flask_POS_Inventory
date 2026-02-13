@@ -34,8 +34,7 @@ A Flask-based Point of Sale and inventory app with role-based access, inventory 
 - `tests/` smoke tests
 
 Notes:
-- `templates/add_product.html` and `templates/update_price.html` are kept as fallback route views.
-- Main day-to-day UX is modal-based from primary pages.
+- CRUD actions are modal-based from primary pages (Inventory, Customers, Admin).
 
 ## Local Setup
 
