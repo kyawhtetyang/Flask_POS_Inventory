@@ -1,24 +1,61 @@
 {% extends "base.html" %}
+{% block title %}Customers - POS{% endblock %}
+{% block page_title %}Customers{% endblock %}
 {% block content %}
-<h2>Customers</h2>
-<form method="POST" action="{{ url_for('customer_add') }}">
-Name: <input type="text" name="name">
-Phone: <input type="text" name="phone">
-Email: <input type="text" name="email">
-<button type="submit">Add Customer</button>
-</form>
-<table border="1">
-<tr><th>ID</th><th>Name</th><th>Phone</th><th>Email</th></tr>
-{% for c in customers %}
-<tr>
-<td>{{ c['id'] }}</td>
-<td>{{ c['name'] }}</td>
-<td>{{ c['phone'] }}</td>
-<td>{{ c['email'] }}</td>
-</tr>
-{% endfor %}
-</table>
+<div class="section-header">
+    <div>
+        <h2 class="section-title">Customers</h2>
+        <p class="section-subtitle">{{ customers|length }} registered customers.</p>
+    </div>
+    <button data-modal-open="addCustomerModal" class="btn btn-primary" type="button">Add Customer</button>
+</div>
+
+<article class="card panel table-wrap">
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Name</th><th>Phone</th><th>Email</th></tr>
+        </thead>
+        <tbody>
+        {% for c in customers %}
+            <tr>
+                <td>{{ c['id'] }}</td>
+                <td>{{ c['name'] }}</td>
+                <td>{{ c['phone'] }}</td>
+                <td>{{ c['email'] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</article>
+
+<div id="addCustomerModal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-dialog card panel" role="dialog" aria-modal="true" aria-labelledby="addCustomerTitle">
+        <div class="section-header">
+            <div>
+                <h2 id="addCustomerTitle" class="section-title">Add Customer</h2>
+                <p class="section-subtitle">Create a customer profile.</p>
+            </div>
+            <button class="btn btn-muted" type="button" data-modal-close>Close</button>
+        </div>
+
+        <form method="POST" action="{{ url_for('customer_add') }}" class="field-grid">
+            <div class="field">
+                <label for="modal_customer_name">Name</label>
+                <input id="modal_customer_name" type="text" name="name" required>
+            </div>
+            <div class="field">
+                <label for="modal_customer_phone">Phone</label>
+                <input id="modal_customer_phone" type="text" name="phone">
+            </div>
+            <div class="field">
+                <label for="modal_customer_email">Email</label>
+                <input id="modal_customer_email" type="text" name="email">
+            </div>
+            <div class="inline-actions modal-actions">
+                <button class="btn btn-primary" type="submit">Add Customer</button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
-
-
-

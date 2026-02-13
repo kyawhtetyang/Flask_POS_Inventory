@@ -1,28 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>POS Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Flask POS Dashboard{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    {% if user %}
-    <h1>Welcome, {{ user.username }} ({{ user.role }})</h1>
-    <nav>
-        <a href="{{ url_for('inventory_list') }}">Inventory</a> |
-        <a href="{{ url_for('new_sale') }}">Sales</a> |
-        <a href="{{ url_for('report_page') }}">Reports</a> |
-        <a href="{{ url_for('customer_page') }}">Customers</a>
+{% if user %}
+<div class="app-shell">
+    <aside class="app-sidebar">
+        <div class="brand">
+            <div class="brand-badge">P</div>
+            <div class="brand-title">Flask POS</div>
+        </div>
+
+        <div class="nav-group-label">Operations</div>
+        <a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a class="nav-link {% if request.endpoint == 'inventory_list' %}active{% endif %}" href="{{ url_for('inventory_list') }}">Inventory</a>
+        <a class="nav-link {% if request.endpoint == 'new_sale' %}active{% endif %}" href="{{ url_for('new_sale') }}">Sales</a>
+        <a class="nav-link {% if request.endpoint == 'report_page' %}active{% endif %}" href="{{ url_for('report_page') }}">Reports</a>
+        <a class="nav-link {% if request.endpoint == 'customer_page' %}active{% endif %}" href="{{ url_for('customer_page') }}">Customers</a>
+
         {% if user.role == 'Admin' %}
-            | <a href="{{ url_for('admin_page') }}">Admin</a>
+        <div class="nav-group-label">Admin</div>
+        <a class="nav-link {% if request.endpoint == 'admin_page' %}active{% endif %}" href="{{ url_for('admin_page') }}">User Management</a>
         {% endif %}
-        | <a href="{{ url_for('logout') }}">Logout</a>
-    </nav>
-    {% else %}
-    <h1>Welcome, Guest</h1>
-    {% endif %}
-    <hr>
-    {% block content %}{% endblock %}
+
+        <div class="nav-footer">
+            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </aside>
+
+    <main class="app-main">
+        <header class="topbar">
+            <h1 class="page-title">{% block page_title %}Dashboard{% endblock %}</h1>
+            <div class="user-chip">{{ user.username }} · {{ user.role }}</div>
+        </header>
+
+        <section class="content">
+            <div class="content-inner">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <div class="alerts">
+                        {% for message in messages %}
+                        <div class="alert">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                {% endwith %}
+
+                {% block content %}
+                <div class="section-header">
+                    <div>
+                        <h2 class="section-title">Dashboard</h2>
+                        <p class="section-subtitle">Choose the next task.</p>
+                    </div>
+                    <a class="btn btn-primary" href="{{ url_for('new_sale') }}">Create Sale</a>
+                </div>
+
+                <article class="card panel">
+                    <ul class="metric-list">
+                        <li class="metric-item"><span class="metric-key">Inventory</span><span class="metric-value"><a href="{{ url_for('inventory_list') }}">Open</a></span></li>
+                        <li class="metric-item"><span class="metric-key">Sales</span><span class="metric-value"><a href="{{ url_for('new_sale') }}">Open</a></span></li>
+                        <li class="metric-item"><span class="metric-key">Reports</span><span class="metric-value"><a href="{{ url_for('report_page') }}">Open</a></span></li>
+                        <li class="metric-item"><span class="metric-key">Customers</span><span class="metric-value"><a href="{{ url_for('customer_page') }}">Open</a></span></li>
+                    </ul>
+                </article>
+                {% endblock %}
+            </div>
+        </section>
+    </main>
+</div>
+{% else %}
+<div class="login-shell">
+    {% block auth_content %}{% endblock %}
+</div>
+{% endif %}
+<script>
+function openModalById(modalId) {
+  const modal = document.getElementById(modalId);
+  if (!modal) return;
+  modal.classList.add('is-open');
+  modal.setAttribute('aria-hidden', 'false');
+}
+
+function closeModalElement(modal) {
+  if (!modal) return;
+  modal.classList.remove('is-open');
+  modal.setAttribute('aria-hidden', 'true');
+}
+
+document.addEventListener('click', (e) => {
+  const openTrigger = e.target.closest('[data-modal-open]');
+  if (openTrigger) {
+    const modalId = openTrigger.getAttribute('data-modal-open');
+    openModalById(modalId);
+    return;
+  }
+
+  const closeTrigger = e.target.closest('[data-modal-close]');
+  if (closeTrigger) {
+    closeModalElement(closeTrigger.closest('.modal'));
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  document.querySelectorAll('.modal.is-open').forEach((modal) => closeModalElement(modal));
+});
+</script>
 </body>
 </html>
-
-

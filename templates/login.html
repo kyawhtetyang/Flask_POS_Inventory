@@ -1,12 +1,33 @@
 {% extends "base.html" %}
-{% block content %}
-<h2>Login</h2>
-<form method="POST">
-    Username: <input type="text" name="username"><br>
-    Password: <input type="password" name="password"><br>
-    <button type="submit">Login</button>
-</form>
+{% block title %}Login - POS{% endblock %}
+{% block auth_content %}
+<div class="card login-card">
+    <div class="login-head">
+        <div class="brand-badge" style="margin: 0 auto;">P</div>
+        <h2 class="login-title">Flask POS</h2>
+        <p class="login-subtitle">Sign in to continue.</p>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alerts" style="margin-bottom: 12px;">
+            {% for message in messages %}
+            <div class="alert">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" class="field-grid" style="grid-template-columns: 1fr;">
+        <div class="field">
+            <label for="username">Username</label>
+            <input id="username" type="text" name="username" required>
+        </div>
+        <div class="field">
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password" required>
+        </div>
+        <button class="btn btn-primary" type="submit">Sign In</button>
+    </form>
+</div>
 {% endblock %}
-
-
-

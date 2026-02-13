@@ -1,53 +1,75 @@
 {% extends "base.html" %}
+{% block title %}Reports - POS{% endblock %}
+{% block page_title %}Reports{% endblock %}
 {% block content %}
-<h2>Reports</h2>
+<div class="section-header">
+    <div>
+        <h2 class="section-title">Reports</h2>
+        <p class="section-subtitle">Sales and performance summary.</p>
+    </div>
+    <button class="btn btn-primary" type="button" onclick="window.print()">Print Report</button>
+</div>
 
-<h3>Daily Sales</h3>
-{% if daily_sales %}
-<table border="1">
-<tr><th>ID</th><th>Time</th><th>Product</th><th>Qty</th><th>Unit Price</th><th>Subtotal</th><th>Discount</th><th>Tax</th><th>Total</th><th>Payment</th></tr>
-{% for s in daily_sales %}
-<tr>
-<td>{{ s.id }}</td>
-<td>{{ s.timestamp }}</td>
-<td>{{ s.name }}</td>
-<td>{{ s.quantity }}</td>
-<td>{{ s.unit_price }}</td>
-<td>{{ s.subtotal }}</td>
-<td>{{ s.discount }}</td>
-<td>{{ s.tax }}</td>
-<td>{{ s.total_price }}</td>
-<td>{{ s.payment_method }}</td>
-</tr>
-{% endfor %}
-</table>
-{% else %}
-<p>No sales today.</p>
-{% endif %}
+<article class="card panel" style="margin-bottom: 16px;">
+    <ul class="metric-list">
+        <li class="metric-item"><span class="metric-key">Total Revenue</span><span class="metric-value">${{ '%.2f'|format(revenue_summary.total_rev or 0) }}</span></li>
+        <li class="metric-item"><span class="metric-key">Total Discounts</span><span class="metric-value">${{ '%.2f'|format(revenue_summary.total_disc or 0) }}</span></li>
+        <li class="metric-item"><span class="metric-key">Total Tax</span><span class="metric-value">${{ '%.2f'|format(revenue_summary.total_tax or 0) }}</span></li>
+        <li class="metric-item"><span class="metric-key">Transactions Today</span><span class="metric-value">{{ daily_sales|length }}</span></li>
+    </ul>
+</article>
 
-<h3>Top Selling Products</h3>
-{% if top_selling %}
-<table border="1">
-<tr><th>Rank</th><th>Product</th><th>Qty Sold</th><th>Gross Revenue</th></tr>
-{% for idx, p in enumerate(top_selling,1) %}
-<tr>
-<td>{{ idx }}</td>
-<td>{{ p.name }}</td>
-<td>{{ p.qty_sold }}</td>
-<td>{{ p.gross }}</td>
-</tr>
-{% endfor %}
-</table>
-{% else %}
-<p>No sales data.</p>
-{% endif %}
+<article class="card panel table-wrap" style="margin-bottom: 16px;">
+    <h2 class="section-title">Daily Sales</h2>
+    {% if daily_sales %}
+    <table style="margin-top: 12px;">
+        <thead>
+            <tr>
+                <th>ID</th><th>Time</th><th>Product</th><th>Qty</th><th>Unit</th><th>Subtotal</th><th>Discount</th><th>Tax</th><th>Total</th><th>Payment</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for s in daily_sales %}
+            <tr>
+                <td>{{ s.id }}</td>
+                <td>{{ s.timestamp }}</td>
+                <td>{{ s.name }}</td>
+                <td>{{ s.quantity }}</td>
+                <td>${{ '%.2f'|format(s.unit_price) }}</td>
+                <td>${{ '%.2f'|format(s.subtotal) }}</td>
+                <td>${{ '%.2f'|format(s.discount) }}</td>
+                <td>${{ '%.2f'|format(s.tax) }}</td>
+                <td>${{ '%.2f'|format(s.total_price) }}</td>
+                <td>{{ s.payment_method }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="section-subtitle" style="margin-top: 12px;">No sales today.</p>
+    {% endif %}
+</article>
 
-<h3>Revenue Summary</h3>
-<ul>
-<li>Total Revenue: ${{ revenue_summary.total_rev }}</li>
-<li>Total Discounts: ${{ revenue_summary.total_disc }}</li>
-<li>Total Tax: ${{ revenue_summary.total_tax }}</li>
-</ul>
+<article class="card panel table-wrap">
+    <h2 class="section-title">Top Selling Products</h2>
+    {% if top_selling %}
+    <table style="margin-top: 12px;">
+        <thead>
+            <tr><th>Rank</th><th>Product</th><th>Qty Sold</th><th>Gross Revenue</th></tr>
+        </thead>
+        <tbody>
+        {% for p in top_selling %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ p.name }}</td>
+                <td>{{ p.qty_sold }}</td>
+                <td>${{ '%.2f'|format(p.gross) }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="section-subtitle" style="margin-top: 12px;">No sales data.</p>
+    {% endif %}
+</article>
 {% endblock %}
-
-
